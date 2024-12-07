@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -14,20 +13,22 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { useLoginMutation } from "@/features/auth/authApi";
 
 const formSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
-  password: z.string().min(8, {
+  password: z.string().min(6, {
     message: "Password must be at least 8 characters long.",
   }),
 });
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const [login, { isLoading }] = useLoginMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,23 +39,23 @@ const LoginForm = () => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
+    try {
+      await login(values).unwrap();
 
-    console.log(values);
+      toast({
+        title: "Success",
+        description: "You have successfully logged in.",
+      });
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    setIsLoading(false);
-
-    // Here you would typically make an API call to your authentication endpoint
-    // For demonstration, we'll just show a success message and redirect
-    toast({
-      title: "Success",
-      description: "You have successfully logged in.",
-    });
-
-    navigate("/");
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "Login failed. Please check your credentials.",
+        variant: "destructive",
+      });
+    }
   }
 
   return (

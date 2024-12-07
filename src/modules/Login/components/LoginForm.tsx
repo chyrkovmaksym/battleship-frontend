@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -26,7 +25,6 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
-  const navigate = useNavigate();
   const { toast } = useToast();
   const [login, { isLoading }] = useLoginMutation();
 
@@ -46,8 +44,6 @@ const LoginForm = () => {
         title: "Success",
         description: "You have successfully logged in.",
       });
-
-      navigate("/");
     } catch (error) {
       console.error(error);
       toast({

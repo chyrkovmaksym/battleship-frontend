@@ -7,8 +7,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { navLinks } from "../config/navLinks";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
+  const { logOut } = useAuth();
+
   return (
     <header className="sticky top-0 z-10 bg-white shadow-md">
       <div className="container mx-auto flex items-center justify-between px-4 py-4">
@@ -64,7 +67,11 @@ const Navbar = () => {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Button variant="outline" className="hidden md:inline-block">
+        <Button
+          variant="outline"
+          className="hidden md:inline-block"
+          onClick={logOut}
+        >
           Log Out
         </Button>
       </div>

@@ -4,6 +4,7 @@ import HomePage from "./modules/Home";
 import LoginPage from "./modules/Login";
 import RegisterPage from "./modules/Register";
 import AuthGuard from "./components/guards/AuthGuard";
+import FriendsPage from "./modules/Friends";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         </Route>
         <Route element={<AuthGuard requireAuth={true} redirectTo="/login" />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/friends" element={<FriendsPage />} />
         </Route>
       </Routes>
     </div>

@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { api } from "./api";
-import authReducer from "../features/auth/authSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+
+import authReducer from "../features/auth/authSlice";
+import friendsReducer from "../features/friends/friendsSlice";
 
 const authPersistConfig = {
   key: "auth",
@@ -14,6 +16,7 @@ const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
 export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
+    friends: friendsReducer,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>

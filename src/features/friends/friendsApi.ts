@@ -29,6 +29,31 @@ interface RespondToFriendRequestRequest {
   status: "accepted" | "rejected";
 }
 
+export interface FriendRequest {
+  _id: string;
+  fromUser: string;
+  toUser: string;
+  status: "pending" | "accepted" | "rejected";
+  createdAt: string;
+  sender: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+  receiver: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+}
+
+interface GetFriendRequestsResponse {
+  type: "fromUser" | "toUser";
+  requests: FriendRequest[];
+}
+
+type GetUserFriendsResponse = User[];
+
 export const friendsApi = api
   .enhanceEndpoints({
     addTagTypes,
@@ -58,6 +83,22 @@ export const friendsApi = api
         }),
         invalidatesTags: ["users"],
       }),
+      getFriendRequests: builder.query<
+        GetFriendRequestsResponse,
+        { type: "fromUser" | "toUser" }
+      >({
+        query: ({ type }) => ({
+          url: `/friends/requests`,
+          params: { type },
+        }),
+        providesTags: ["users"],
+      }),
+      getFriends: builder.query<GetUserFriendsResponse, void>({
+        query: () => ({
+          url: `/friends/my`,
+        }),
+        providesTags: ["users"],
+      }),
     }),
   });
 
@@ -65,4 +106,6 @@ export const {
   useSearchUsersQuery,
   useSendFriendRequestMutation,
   useRespondToFriendRequestMutation,
+  useGetFriendRequestsQuery,
+  useGetFriendsQuery,
 } = friendsApi;

@@ -5,18 +5,28 @@ import storage from "redux-persist/lib/storage";
 
 import authReducer from "../features/auth/authSlice";
 import friendsReducer from "../features/friends/friendsSlice";
+import roomReducer from "../features/room/roomSlice";
+import userReducer from "../features/user/userSlice";
 
 const authPersistConfig = {
   key: "auth",
   storage,
 };
 
+const userPersistConfig = {
+  key: "user",
+  storage,
+};
+
 const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
 
 export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
     friends: friendsReducer,
+    room: roomReducer,
+    user: persistedUserReducer,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>

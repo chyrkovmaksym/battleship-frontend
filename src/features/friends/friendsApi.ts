@@ -62,14 +62,14 @@ export const friendsApi = api
     endpoints: (builder) => ({
       searchUsers: builder.query<SearchUsersResponse, SearchUsersRequest>({
         query: ({ searchTerm, page = 1, limit = 10 }) => ({
-          url: "/users/search",
+          url: "/api/users/search",
           params: { searchTerm, page, limit },
         }),
         providesTags: ["users"],
       }),
       sendFriendRequest: builder.mutation({
         query: ({ toUserId }: SendFriendRequestRequest) => ({
-          url: "/friends/send",
+          url: "/api/friends/send",
           method: "POST",
           body: { toUserId },
         }),
@@ -77,7 +77,7 @@ export const friendsApi = api
       }),
       respondToFriendRequest: builder.mutation({
         query: ({ requestId, status }: RespondToFriendRequestRequest) => ({
-          url: "/friends/respond",
+          url: "/api/friends/respond",
           method: "POST",
           body: { requestId, status },
         }),
@@ -88,14 +88,14 @@ export const friendsApi = api
         { type: "fromUser" | "toUser" }
       >({
         query: ({ type }) => ({
-          url: `/friends/requests`,
+          url: `/api/friends/requests`,
           params: { type },
         }),
         providesTags: ["users"],
       }),
       getFriends: builder.query<GetUserFriendsResponse, void>({
         query: () => ({
-          url: `/friends/my`,
+          url: `/api/friends/my`,
         }),
         providesTags: ["users"],
       }),

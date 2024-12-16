@@ -5,6 +5,8 @@ import LoginPage from "./modules/Login";
 import RegisterPage from "./modules/Register";
 import AuthGuard from "./components/guards/AuthGuard";
 import FriendsPage from "./modules/Friends";
+import RoomPage from "./modules/Room";
+import OnlineGamePage from "./modules/OnlineGame";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route element={<AuthGuard requireAuth={true} redirectTo="/login" />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/friends" element={<FriendsPage />} />
+          <Route path="/room" element={<RoomPage />} />
+          <Route path="/online-game/:gameId" element={<OnlineGamePage />} />
         </Route>
       </Routes>
     </div>

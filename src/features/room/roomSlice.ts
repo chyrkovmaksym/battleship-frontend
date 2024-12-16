@@ -18,7 +18,6 @@ const roomSlice = createSlice({
       state,
       action: PayloadAction<{ gameId: string; players: string[] }>
     ) {
-      console.log(action.payload, "payload");
       state.gameId = action.payload.gameId;
       state.players = action.payload.players;
     },

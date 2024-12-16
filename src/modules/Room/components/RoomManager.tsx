@@ -1,22 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSocket } from "../../../services/socketService";
+import { getSocket } from "../../../lib/socketService";
 import { setRoom } from "../../../features/room/roomSlice";
 import { useGetCurrentUserQuery } from "@/features/user/userApi";
-import { selectPlayers } from "@/features/room/roomSelectors";
-// import { useNavigate } from "react-router-dom";
+import { selectGameId, selectPlayers } from "@/features/room/roomSelectors";
+import {
+  createEmptyField,
+  generateRandomField,
+} from "@/lib/generateRandomField";
+import { Button } from "@/components/ui/button";
+import GameField from "@/components/ui/game-field";
+import { toast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const RoomManager: React.FC = () => {
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const players = useSelector(selectPlayers);
+  const gameId = useSelector(selectGameId);
 
   const socket = getSocket();
   const { data: userData } = useGetCurrentUserQuery();
 
   const [playerId, setPlayerId] = useState<string>("");
-  const [gameId, setGameId] = useState<string>("");
+  const [gameIdInput, setGameIdInput] = useState<string>("");
+  const [field, setField] = useState<string[][]>(createEmptyField());
+  const [placedShips, setPlacedShips] = useState(false);
+  const [isWaitingForOpponent, setIsWaitingForOpponent] = useState(false);
 
   const handleCreateRoom = () => {
     if (!playerId) return;
@@ -25,7 +36,18 @@ const RoomManager: React.FC = () => {
 
   const handleJoinRoom = () => {
     if (!playerId) return;
-    socket.emit("joinRoom", { gameId, playerId });
+    socket.emit("joinRoom", { gameId: gameIdInput, playerId });
+  };
+
+  const handleGenerateRandomField = () => {
+    setPlacedShips(true);
+    const field = generateRandomField();
+    setField(field);
+  };
+
+  const handleStartGame = () => {
+    if (!placedShips) return;
+    socket.emit("submitBoard", { gameId, playerId, board: field });
   };
 
   useEffect(() => {
@@ -40,9 +62,24 @@ const RoomManager: React.FC = () => {
       dispatch(setRoom({ gameId: data.gameId, players: data.players }));
     });
 
+    socket.on("waitingForOpponent", (data) => {
+      toast({
+        title: data.message,
+      });
+      setIsWaitingForOpponent(true);
+    });
+
+    socket.on("gameStarted", (data) => {
+      toast({
+        title: "Game started!",
+      });
+      navigate(`/online-game/${data.gameId}`);
+    });
+
     return () => {
       socket.off("roomCreated");
       socket.off("playerJoined");
+      socket.off("waitingForOpponent");
     };
   }, [userData, socket, dispatch]);
 
@@ -54,32 +91,32 @@ const RoomManager: React.FC = () => {
     <div className="p-4 space-y-4">
       {players.length < 2 ? (
         <>
-          <button
-            onClick={handleCreateRoom}
-            className="bg-blue-500 text-white py-2 px-4 rounded w-full"
-          >
+          <Button variant="outline" onClick={handleCreateRoom}>
             Create Room
-          </button>
+          </Button>
 
           <div>
             <input
               type="text"
               placeholder="Game ID"
-              value={gameId}
-              onChange={(e) => setGameId(e.target.value)}
+              value={gameIdInput}
+              onChange={(e) => setGameIdInput(e.target.value)}
               className="border p-2 rounded w-full"
             />
           </div>
 
-          <button
-            onClick={handleJoinRoom}
-            className="bg-green-500 text-white py-2 px-4 rounded w-full"
-          >
-            Join Room
-          </button>
+          <Button onClick={handleJoinRoom}>Join Room</Button>
         </>
+      ) : !isWaitingForOpponent ? (
+        <div className="flex flex-col items-center space-y-6">
+          <GameField field={field} />
+          <div className="flex flex-col space-y-3 w-full">
+            <Button onClick={handleGenerateRandomField}>Generate field</Button>
+            <Button onClick={handleStartGame}>Start</Button>
+          </div>
+        </div>
       ) : (
-        <div>Place your ships</div>
+        <div>Waiting for the opponent to place the ships...</div>
       )}
     </div>
   );

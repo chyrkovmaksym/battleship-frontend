@@ -7,7 +7,7 @@ import { Toaster } from "./components/ui/toaster.tsx";
 import { persistor, store } from "./app/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { initializeSocket } from "./services/socketService.ts";
+import { initializeSocket } from "./lib/socketService.ts";
 
 initializeSocket();
 

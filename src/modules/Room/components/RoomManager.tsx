@@ -109,7 +109,7 @@ const RoomManager: React.FC = () => {
         </>
       ) : !isWaitingForOpponent ? (
         <div className="flex flex-col items-center space-y-6">
-          <GameField field={field} />
+          <GameField field={field} isPlayerBoard />
           <div className="flex flex-col space-y-3 w-full">
             <Button onClick={handleGenerateRandomField}>Generate field</Button>
             <Button onClick={handleStartGame}>Start</Button>

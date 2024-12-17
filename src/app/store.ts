@@ -7,6 +7,7 @@ import authReducer from "../features/auth/authSlice";
 import friendsReducer from "../features/friends/friendsSlice";
 import roomReducer from "../features/room/roomSlice";
 import userReducer from "../features/user/userSlice";
+import gameReducer from "../features/game/gameSlice";
 
 const authPersistConfig = {
   key: "auth",
@@ -27,6 +28,7 @@ export const store = configureStore({
     friends: friendsReducer,
     room: roomReducer,
     user: persistedUserReducer,
+    game: gameReducer,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>

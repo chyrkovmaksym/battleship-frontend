@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import GameField from "@/components/ui/game-field";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { setBoard, setTurn } from "@/features/game/gameSlice";
 
 const RoomManager: React.FC = () => {
   const dispatch = useDispatch();
@@ -73,6 +74,9 @@ const RoomManager: React.FC = () => {
       toast({
         title: "Game started!",
       });
+      dispatch(setTurn(data.turn));
+      dispatch(setBoard({ isMyBoard: true, board: field }));
+      dispatch(setBoard({ isMyBoard: false, board: createEmptyField() }));
       navigate(`/online-game/${data.gameId}`);
     });
 
@@ -81,14 +85,14 @@ const RoomManager: React.FC = () => {
       socket.off("playerJoined");
       socket.off("waitingForOpponent");
     };
-  }, [userData, socket, dispatch]);
+  }, [userData, socket, dispatch, field, navigate]);
 
   useEffect(() => {
     socket.connect();
   }, []);
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 space-y-4 flex flex-col">
       {players.length < 2 ? (
         <>
           <Button variant="outline" onClick={handleCreateRoom}>

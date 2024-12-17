@@ -13,7 +13,7 @@ const getCellStyles = (cell: string) => {
     return "bg-blue-200"; // Missed cell style
   } else if (cell.startsWith("S")) {
     return "bg-green-400"; // Ship cell style
-  } else if (cell === "H") {
+  } else if (cell.startsWith("H")) {
     return "bg-red-400"; // Hit cell style
   } else if (cell === "K") {
     return "bg-black"; // Killed cell style
@@ -45,7 +45,10 @@ const GameField = ({ field, isPlayerBoard, onCellClick }: Props) => {
                 }`}
                 title={cell || "Empty"}
               >
-                {cell !== "" && cell !== "M" && cell !== "H" && cell !== "K" ? (
+                {cell !== "" &&
+                cell !== "M" &&
+                !cell.startsWith("H") &&
+                cell !== "K" ? (
                   <span className="text-sm">{cell}</span>
                 ) : null}
               </div>

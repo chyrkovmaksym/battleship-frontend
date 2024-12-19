@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSocket } from "../../../lib/socketService";
-import { setRoom } from "../../../features/room/roomSlice";
+import { getSocket } from "../lib/socketService";
+import { setRoom } from "../features/room/roomSlice";
 import { useGetCurrentUserQuery } from "@/features/user/userApi";
 import { selectGameId, selectPlayers } from "@/features/room/roomSelectors";
 import {
@@ -84,6 +84,7 @@ const RoomManager: React.FC = () => {
       socket.off("roomCreated");
       socket.off("playerJoined");
       socket.off("waitingForOpponent");
+      socket.off("gameStarted");
     };
   }, [userData, socket, dispatch, field, navigate]);
 

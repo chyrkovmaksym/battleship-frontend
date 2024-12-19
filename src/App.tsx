@@ -7,6 +7,8 @@ import AuthGuard from "./components/guards/AuthGuard";
 import FriendsPage from "./modules/Friends";
 import RoomPage from "./modules/Room";
 import OnlineGamePage from "./modules/OnlineGame";
+import InviteFriendRoomPage from "./modules/InviteFriendRoom";
+import AcceptFriendGameRoom from "./modules/AcceptFriendGameRoom";
 
 function App() {
   return (
@@ -20,6 +22,14 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/friends" element={<FriendsPage />} />
           <Route path="/room" element={<RoomPage />} />
+          <Route
+            path="/invite-friend-room/:friendId"
+            element={<InviteFriendRoomPage />}
+          />
+          <Route
+            path="/accept-friend-game-room/:gameId"
+            element={<AcceptFriendGameRoom />}
+          />
           <Route path="/online-game/:gameId" element={<OnlineGamePage />} />
         </Route>
       </Routes>

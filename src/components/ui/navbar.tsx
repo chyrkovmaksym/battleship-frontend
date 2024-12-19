@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { navLinks } from "../config/navLinks";
 import { useAuth } from "@/hooks/useAuth";
+import { NotificationsMenu } from "../NotificationsMenu";
 
 const Navbar = () => {
   const { logOut } = useAuth();
@@ -38,42 +39,46 @@ const Navbar = () => {
           ))}
         </nav>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="md:hidden">
-              Menu
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {navLinks.map((link) => (
-              <DropdownMenuItem key={link.to}>
-                <NavLink
-                  to={link.to}
-                  className={({ isActive }) =>
-                    `block w-full ${
-                      isActive
-                        ? "text-primary"
-                        : "text-gray-700 hover:text-gray-900"
-                    }`
-                  }
-                >
-                  {link.label}
-                </NavLink>
-              </DropdownMenuItem>
-            ))}
-            <DropdownMenuItem>
-              <button className="w-full text-left">Log Out</button>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center space-x-4">
+          <NotificationsMenu />
 
-        <Button
-          variant="outline"
-          className="hidden md:inline-block"
-          onClick={logOut}
-        >
-          Log Out
-        </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="md:hidden">
+                Menu
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {navLinks.map((link) => (
+                <DropdownMenuItem key={link.to}>
+                  <NavLink
+                    to={link.to}
+                    className={({ isActive }) =>
+                      `block w-full ${
+                        isActive
+                          ? "text-primary"
+                          : "text-gray-700 hover:text-gray-900"
+                      }`
+                    }
+                  >
+                    {link.label}
+                  </NavLink>
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuItem>
+                <button className="w-full text-left">Log Out</button>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Button
+            variant="outline"
+            className="hidden md:inline-block"
+            onClick={logOut}
+          >
+            Log Out
+          </Button>
+        </div>
       </div>
     </header>
   );

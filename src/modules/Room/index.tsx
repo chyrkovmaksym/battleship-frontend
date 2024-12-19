@@ -1,6 +1,6 @@
 import MainLayout from "@/layouts/MainLayout";
-import RoomDetails from "@/modules/Room/components/RoomDetails";
-import RoomManager from "@/modules/Room/components/RoomManager";
+import RoomDetails from "@/components/RoomDetails";
+import RoomManager from "@/components/RoomManager";
 
 const RoomPage = () => {
   return (

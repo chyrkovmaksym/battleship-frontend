@@ -11,19 +11,22 @@ import {
 } from "@/features/friends/friendsApi";
 import { toast } from "@/hooks/use-toast";
 import UserCard from "./components/UserCard";
+import { useNavigate } from "react-router-dom";
 
 enum FriendsPageTabs {
-  all = "all",
   friends = "friends",
+  all = "all",
   receivedRequests = "receivedRequests",
   sentRequests = "sentRequests",
 }
 
 const FriendsPage = () => {
+  const navigate = useNavigate();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState<FriendsPageTabs>(
-    FriendsPageTabs.all
+    FriendsPageTabs.friends
   );
   const [sendFriendRequest] = useSendFriendRequestMutation();
   const [respondToFriendRequest] = useRespondToFriendRequestMutation();
@@ -81,6 +84,10 @@ const FriendsPage = () => {
     }
   };
 
+  const handleSendGameRequest = (friendId: string) => {
+    navigate(`/invite-friend-room/${friendId}`);
+  };
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
@@ -102,18 +109,18 @@ const FriendsPage = () => {
 
         <div className="flex mb-4">
           <Button
-            variant={activeTab === FriendsPageTabs.all ? "default" : "outline"}
-            onClick={() => setActiveTab(FriendsPageTabs.all)}
-          >
-            All Users
-          </Button>
-          <Button
             variant={
               activeTab === FriendsPageTabs.friends ? "default" : "outline"
             }
             onClick={() => setActiveTab(FriendsPageTabs.friends)}
           >
             My Friends
+          </Button>
+          <Button
+            variant={activeTab === FriendsPageTabs.all ? "default" : "outline"}
+            onClick={() => setActiveTab(FriendsPageTabs.all)}
+          >
+            All Users
           </Button>
           <Button
             variant={
@@ -134,6 +141,34 @@ const FriendsPage = () => {
             Sent Requests
           </Button>
         </div>
+
+        {activeTab === FriendsPageTabs.friends && (
+          <div>
+            {isLoadingMyFriends ? (
+              <p>Loading friends list...</p>
+            ) : (
+              <ul>
+                {myFriends?.map((friend) => (
+                  <UserCard
+                    key={friend._id}
+                    user={{
+                      _id: friend._id,
+                      firstName: friend.firstName,
+                      lastName: friend.lastName,
+                      email: friend.email,
+                    }}
+                    actions={[
+                      {
+                        title: "Invite to game",
+                        handleClick: () => handleSendGameRequest(friend._id),
+                      },
+                    ]}
+                  />
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
 
         {activeTab === FriendsPageTabs.all && (
           <div>
@@ -165,34 +200,6 @@ const FriendsPage = () => {
                   ))}
                 </ul>
               </>
-            )}
-          </div>
-        )}
-
-        {activeTab === FriendsPageTabs.friends && (
-          <div>
-            {isLoadingMyFriends ? (
-              <p>Loading friends list...</p>
-            ) : (
-              <ul>
-                {myFriends?.map((friend) => (
-                  <UserCard
-                    key={friend._id}
-                    user={{
-                      _id: friend._id,
-                      firstName: friend.firstName,
-                      lastName: friend.lastName,
-                      email: friend.email,
-                    }}
-                    actions={[
-                      {
-                        title: "Invite to game",
-                        handleClick: () => console.log(friend._id),
-                      },
-                    ]}
-                  />
-                ))}
-              </ul>
             )}
           </div>
         )}

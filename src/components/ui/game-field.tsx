@@ -49,7 +49,7 @@ const GameField = ({ field, isPlayerBoard, onCellClick }: Props) => {
                 cell !== "M" &&
                 !cell.startsWith("H") &&
                 cell !== "K" ? (
-                  <span className="text-sm">{cell}</span>
+                  <span className="text-sm" />
                 ) : null}
               </div>
             ))}

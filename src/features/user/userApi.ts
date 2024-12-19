@@ -15,7 +15,7 @@ export const userApi = api.injectEndpoints({
         url: "/api/users/me",
         method: "GET",
       }),
-      onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+      onQueryStarted: async (_arg, { dispatch, queryFulfilled }) => {
         try {
           const { data } = await queryFulfilled;
           dispatch(

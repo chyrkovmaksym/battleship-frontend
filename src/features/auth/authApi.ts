@@ -29,7 +29,7 @@ export const authApi = api.injectEndpoints({
         method: "POST",
         body: credentials,
       }),
-      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
+      onQueryStarted: async (_args, { dispatch, queryFulfilled }) => {
         try {
           const { data } = await queryFulfilled;
           dispatch(setCredentials(data));
